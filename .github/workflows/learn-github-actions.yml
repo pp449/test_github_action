@@ -1,8 +1,8 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
+name: CI Workflow
+on: push
 jobs:
   checkout:
     runs-on: ubuntu-latest
     steps:
       - run: ls -al
+      - uses: actions/checkout@v3
