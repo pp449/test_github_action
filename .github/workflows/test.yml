@@ -34,7 +34,7 @@ jobs:
 
       # yarn을 이용해 패키지 설치
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile --ignore-optional --force
 
       # 테스트 수행
       - name: Run tests
