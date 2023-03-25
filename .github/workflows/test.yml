@@ -30,11 +30,11 @@ jobs:
 
       # yarn 설치
       - name: Install Yarn
-        run: sudo npm install -g yarn
+        run: npm install -g yarn
 
       # yarn을 이용해 패키지 설치
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: sudo yarn install --frozen-lockfile
 
       # 테스트 수행
       - name: Run tests
