@@ -1,10 +1,46 @@
 name: CI Workflow
-on: push
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - "**"
 jobs:
-  checkout:
+  docker:
+    timout-minutes: 10
     runs-on: ubuntu-latest
+
     steps:
-      - run: ls -al
-      - uses: actions/checkout@v3
-      - run: ls -al
-      - run: cat .github/workflows/learn-github-actions.yml
+      # 해당 저장소의 코드를 가져온다
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # docker-compose 테스트
+      - name: Start docker container
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      # Node 16 버전 사용
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # yarn 설치
+      - name: Install Yarn
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: rm -rf node_modules
+          cmd: install
+
+      # 테스트 수행
+      - name: Test the app
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
+
+      # 앞의 작업이 성공/실패와 관계 없이 컨테이너 종료
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
